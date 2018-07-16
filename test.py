@@ -1,4 +1,4 @@
-from classies.message import Message
+# from classies.message import Message
 
-mytest = Message()
+# mytest = Message()
 proba = 'Ivan'
