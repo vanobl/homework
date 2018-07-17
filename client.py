@@ -2,6 +2,7 @@ import socket
 import json
 import time
 import logging, logging.config
+from threading import Thread
 #импортируем собственные классы
 from classies.create_message import CreateMessage
 from classies.presence import CreatePresence
@@ -35,20 +36,21 @@ jmsg = PackMessage(press.create_presence())
 s.send(jmsg.pack())
 
 print('Переход в режим слушателя.')
-while True:
-    clmsg = ReceiveMessage()
-    msg = clmsg.receive_message(s)
-    if msg['action'] == 'probe':
-        print('Сервер получил сообщение в: {}'.format(msg['time']))
-    if msg['action'] == 'response':
-        print(msg['error'])
-        vopros = input('Создать нового пользователя? (y/n) ')
-        if vopros == 'y':
-            pass
-        elif vopros == 'n':
-            exit()
-        else:
-            print('Введены не верные данные.')
+def read_client():
+    while True:
+        clmsg = ReceiveMessage()
+        msg = clmsg.receive_message(s)
+        if msg['action'] == 'probe':
+            print('Сервер получил сообщение в: {}'.format(msg['time']))
+        if msg['action'] == 'response':
+            print(msg['error'])
+            vopros = input('Создать нового пользователя? (y/n) ')
+            if vopros == 'y':
+                pass
+            elif vopros == 'n':
+                exit()
+            else:
+                print('Введены не верные данные.')
 
 #отключаемся от сервера
 #s.close()

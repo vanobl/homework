@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import socket
 import time
 import logging, logging.config
@@ -21,15 +22,18 @@ class Server:
         s.settimeout(0.2)
 
         clients = []
-
-        log.debug('Запуск сервера.')
+        text = u'Запуск сервера.'
+        print(text)
+        log.debug(text)
 
         while True:
             try:
                 #ждём подключения
                 sock_client, addr_client = s.accept()
                 #выводим сообщение о подключении
-                log.debug('Клиент {} подключился'.format(sock_client.getsockname))
+                #text = u'Клиент {} подключился'.format(sock_client.getsockname)
+                text = 'Proverka'
+                log.debug(text)
                 print(str(sock_client.getsockname))
                 #распаковываем сообщение
                 my_recv = ReceiveMessage()
