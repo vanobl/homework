@@ -2,3 +2,5 @@
 
 # mytest = Message()
 proba = 'Ivan'
+b = input('Введите что-нибудь: ')
+print(b)
