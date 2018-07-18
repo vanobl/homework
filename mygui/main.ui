@@ -30,11 +30,11 @@
       <x>170</x>
       <y>50</y>
       <width>441</width>
-      <height>401</height>
+      <height>351</height>
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_2">
+   <widget class="QPushButton" name="btn_login">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -74,7 +74,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="btn_3">
+   <widget class="QPushButton" name="btn_add_friend">
     <property name="geometry">
      <rect>
       <x>510</x>
@@ -95,6 +95,29 @@
       <width>171</width>
       <height>22</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="text_input">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>410</y>
+      <width>351</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_send">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>410</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Отправить</string>
     </property>
    </widget>
   </widget>
@@ -134,6 +157,16 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>in_login</tabstop>
+  <tabstop>btn_login</tabstop>
+  <tabstop>contactView</tabstop>
+  <tabstop>btn_add_friend</tabstop>
+  <tabstop>list_users</tabstop>
+  <tabstop>btn_send</tabstop>
+  <tabstop>text_input</tabstop>
+  <tabstop>textEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

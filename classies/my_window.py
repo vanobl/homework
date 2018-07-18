@@ -5,7 +5,7 @@ import os
 
 import sqlalchemy
 #импортируем классы таблиц
-from db.alchemy import CUsers, ListFriends
+from db.alchemy import CUsers, ListFriends, CMassages
 #создаём подключение
 engine = sqlalchemy.create_engine('sqlite:///db/messages.db')
 #создаём сессию
@@ -19,19 +19,36 @@ class MyWindow(QtWidgets.QMainWindow):
         self.polzovatel = ''
 
         #назначим подксказки
-        self.window.btn_2.setToolTip('Кнопка для заполнения списка.')
+        self.window.btn_login.setToolTip('Кнопка для заполнения списка.')
         self.window.textEdit.setToolTip('Окно для <b>выбранных</b> друзей.')
 
         #назначим действия для объектов
-        self.window.btn_2.clicked.connect(self.login)
+        self.window.btn_login.clicked.connect(self.login)
         self.window.contactView.clicked.connect(self.set_text)
         self.window.select_exit.toggled.connect(QCoreApplication.instance().quit)
-        self.window.btn_3.clicked.connect(self.add_friend)
+        self.window.btn_add_friend.clicked.connect(self.add_friend)
     
     #переносим выделенного друга в текстовое поле
     def set_text(self, index):
-        session.query(CMassages)
-        self.window.textEdit.append(self.window.contactView.model().data(index))
+        #вытаскиваем все сообщения из базы
+        #в будущем надо будет оптимизировать
+        mess = session.query(CMassages).all()
+        #получаем  id выбранного пользователя в списке пользователей
+        userid = self.searh_user_id(self.window.contactView.model().data(index))
+        #добавляем id просто для тестирования
+        self.window.textEdit.append(str(userid))
+        #формат на будущее
+        format = QtGui.QTextBlockFormat()
+        #перебираем сообщения
+        for msg in mess:
+            if msg.user_to == userid:
+                #записываем сообщение от друга
+                friend_text = '{}'.format(msg.message)
+                self.window.textEdit.append(friend_text)
+                if msg.user_from == self.searh_user_id(self.polzovatel):
+                    #записываем сообщение от себя
+                    my_text = '{}'.format(msg.message)
+                    self.window.textEdit.append(my_text)
     
     #обработка нажатия кнопки входа
     def login(self):

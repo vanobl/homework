@@ -17,6 +17,7 @@ log = logging.getLogger('main')
 class Server:
     def __init__(self, port=8888):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print(type(port))
         s.bind(('0.0.0.0', port))
         s.listen(5)
         s.settimeout(0.2)
