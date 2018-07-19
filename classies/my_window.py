@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets, uic, QtGui
 from PyQt5.QtCore import QCoreApplication
 import sys
 import os
+import socket
+
+#импортируем свобственные классы
+from classies.authenticate import Authenticate
+from classies.pack import PackMessage
 
 import sqlalchemy
 #импортируем классы таблиц
@@ -17,6 +23,11 @@ class MyWindow(QtWidgets.QMainWindow):
         path = os.path.join('mygui', 'main.ui')
         self.window = uic.loadUi(path, self)
         self.polzovatel = ''
+
+        #создаём сокет
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #подключаемся к нужному адресу
+        self.s.connect(('localhost', 8888))
 
         #назначим подксказки
         self.window.btn_login.setToolTip('Кнопка для заполнения списка.')
@@ -53,7 +64,12 @@ class MyWindow(QtWidgets.QMainWindow):
     #обработка нажатия кнопки входа
     def login(self):
         self.polzovatel = self.window.in_login.text()
-        self.set_text_viev()
+        auth = Authenticate(self.polzovatel)
+        user = auth.create_authenticate()
+        msg_pack = PackMessage(user)
+        self.s.send(msg_pack.pack())
+        #self.set_text_viev()
+        self.slush()
     
     #заполняем список друзей
     def set_text_viev(self):
@@ -83,3 +99,10 @@ class MyWindow(QtWidgets.QMainWindow):
     def searh_user_id(self, sendname):
         find_user = session.query(CUsers).filter_by(name = sendname).first()
         return find_user.id
+    
+
+    #метод слушателя
+
+    def slush(self):
+        while True:
+            pass

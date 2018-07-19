@@ -7,4 +7,5 @@ class PackMessage():
     def pack(self):
         #пакуем сообщение
         json_msg = json.dumps(self._msg)
+        #возвращаем кодированное сообщение
         return json_msg.encode('utf-8')
