@@ -79,12 +79,12 @@
      <rect>
       <x>510</x>
       <y>10</y>
-      <width>75</width>
+      <width>101</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Добавить</string>
+     <string>Добавить друга</string>
     </property>
    </widget>
    <widget class="QComboBox" name="list_users">

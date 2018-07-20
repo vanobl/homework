@@ -44,6 +44,7 @@ class Server:
                 #проверяем сообщение
                 ver = VerificationMessage(mydict)
                 user = ver.verification()
+                #добавляем клиента и его сокет в словарь
                 self._clients[user] = sock_client
                 print(self._clients.values())
             except OSError as e:
