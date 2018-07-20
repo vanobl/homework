@@ -9,8 +9,6 @@ class VerificationMessage:
         self._dict = msg_dict
     
     def verification(self):
-        print('из проверки: {}'.format(self._dict))
-
         if self._dict['action'] == 'authenticate':
             user = VerificationUsers(self._dict['user']['account_name'])
             return user

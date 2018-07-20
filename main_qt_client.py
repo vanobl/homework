@@ -1,10 +1,10 @@
-import PySide2
+from PySide2.QtWidgets import QApplication
 import sys
 import os
-from classies.my_window import MyWindow
+from classies.my_window_1 import MyWindow
 
 if __name__ == '__main__':
-    app = PySide2.QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = MyWindow()
     # window.proverka()
     window.show()

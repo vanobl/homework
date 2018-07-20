@@ -1,11 +1,14 @@
-import PySide2
-# from classies.message import Message
+import sys
+import os
+ 
+from PySide2.QtUiTools import QUiLoader
+from PySide2.QtWidgets import QApplication
+from PySide2.QtCore import QFile
 
-# mytest = Message()
-proba = 'Ivan'
-b = input('Введите что-нибудь: ')
-print(b)
-proba = 'проверка гита на линуксе в vs code'
-
-
-print(PySide2.QtHelp.QHelpIndexWidget)
+from classies.test_form import Form
+ 
+ 
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    form = Form(os.path.join('mygui', 'main.ui'))
+    sys.exit(app.exec_())

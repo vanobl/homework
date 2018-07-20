@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="win_chat">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -165,7 +165,7 @@
   <tabstop>list_users</tabstop>
   <tabstop>btn_send</tabstop>
   <tabstop>text_input</tabstop>
-  <tabstop>textEdit</tabstop>
+  <tabstop>win_chat</tabstop>
  </tabstops>
  <resources/>
  <connections/>

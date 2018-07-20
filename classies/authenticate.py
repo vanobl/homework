@@ -16,6 +16,4 @@ class Authenticate():
             }
         }
 
-        #print('из authenticate: {}'.format(authenticate))
-
         return authenticate

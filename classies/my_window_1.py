@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-import PySide2
+from PySide2 import QtWidgets, QtUiTools, QtGui
+from PySide2.QtCore import QCoreApplication, QFile
 import sys
 import os
 import socket
@@ -16,11 +17,16 @@ engine = sqlalchemy.create_engine('sqlite:///db/messages.db')
 #создаём сессию
 session = sqlalchemy.orm.sessionmaker(bind=engine)()
 
-class MyWindow(PySide2.QtWidgets.QMainWindow):
+class MyWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         path = os.path.join('mygui', 'main.ui')
-        self.window = PySide2.QtUiTools.QUiLoader(path)
+        file = QFile(path)
+        file.open(QFile.ReadOnly)
+        loader = QtUiTools.QUiLoader()
+        self.window = loader.load(file, self)
+        file.close()
+        #return self.window
         #self.window = uic.loadUi(path, self)
         self.polzovatel = ''
 
@@ -36,7 +42,7 @@ class MyWindow(PySide2.QtWidgets.QMainWindow):
         #назначим действия для объектов
         self.window.btn_login.clicked.connect(self.login)
         self.window.contactView.clicked.connect(self.set_text)
-        self.window.select_exit.toggled.connect(PySide2.QtCore.QCoreApplication.instance().quit)
+        self.window.select_exit.toggled.connect(QCoreApplication.instance().quit)
         self.window.btn_add_friend.clicked.connect(self.add_friend)
     
     #переносим выделенного друга в текстовое поле
@@ -49,7 +55,7 @@ class MyWindow(PySide2.QtWidgets.QMainWindow):
         #добавляем id просто для тестирования
         self.window.textEdit.append(str(userid))
         #формат на будущее
-        format = PySide2.QtGui.QTextBlockFormat()
+        format = QtGui.QTextBlockFormat()
         #перебираем сообщения
         for msg in mess:
             if msg.user_to == userid:
@@ -74,9 +80,9 @@ class MyWindow(PySide2.QtWidgets.QMainWindow):
     #заполняем список друзей
     def set_text_viev(self):
         users = session.query(ListFriends).filter_by(id_cuser = self.searh_user_id(self.polzovatel)).all()
-        model = PySide2.QtGui.QStandardItemModel()
+        model = QtGui.QStandardItemModel()
         for user in users:
-            model.appendRow(PySide2.QtGui.QStandardItem(user.r_id_friend.name))
+            model.appendRow(QtGui.QStandardItem(user.r_id_friend.name))
         self.window.contactView.setModel(model)
         self.add_item_combo()
 

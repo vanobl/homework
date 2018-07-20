@@ -22,7 +22,7 @@ class Server:
         self.s.listen(5)
         self.s.settimeout(0.2)
 
-        self._clients = []
+        self._clients = {}
         self._adduser = Thread(target=self.user_connect)
         self._guser = Thread(target=self.user_get)
         text = u'Запуск сервера.'
@@ -45,6 +45,7 @@ class Server:
                 ver = VerificationMessage(mydict)
                 user = ver.verification()
                 self._clients[user] = sock_client
+                print(self._clients.values())
             except OSError as e:
                 #ошибка истечения таймаута
                 pass
