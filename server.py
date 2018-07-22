@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+import sys
 import socket
 import time
 import logging, logging.config
@@ -9,11 +11,21 @@ from threading import Thread
 #импортируем собственные классы
 from classies.receive_message import ReceiveMessage
 from classies.verification_message import VerificationMessage
+from classies.create_friends import CreateFriends
 
 #указываем файл логгера
 logging.config.fileConfig('log.conf')
 #включаем нужный логгер
 log = logging.getLogger('main')
+
+import sqlalchemy
+#импортируем классы таблиц
+from db.alchemy import CUsers, ListFriends, CMassages
+#создаём подключение
+path = os.path.join('db', 'messages.db')
+engine = sqlalchemy.create_engine('sqlite:///{}'.format(path))
+#создаём сессию
+session = sqlalchemy.orm.sessionmaker(bind=engine)()
 
 class Server:
     def __init__(self, port=8888):
@@ -39,22 +51,42 @@ class Server:
                 #ждём подключения
                 sock_client, addr_client = self.s.accept()
                 #распаковываем сообщение
-                my_recv = ReceiveMessage()
-                mydict = my_recv.receive_message(sock_client)
+                my_recv = ReceiveMessage(sock_client)
+                mydict = my_recv.receive_message()
                 #проверяем сообщение
                 ver = VerificationMessage(mydict)
                 user = ver.verification()
                 #добавляем клиента и его сокет в словарь
                 self._clients[user] = sock_client
-                print(self._clients.values())
+                #отправляем имена пользователей клиенту
+                self.send_friends(self.get_user_friends(user), self._clients[user])
             except OSError as e:
                 #ошибка истечения таймаута
                 pass
     
+    #метод отправки пользователей для заполнения списка
+    def send_friends(self, friends, sock_user):
+        dict_friends = CreateFriends(friends).create_friends()
+        print(dict_friends)
+
     def user_get(self):
         while True:
-            print(self._clients)
+            #print(self._clients)
             time.sleep(5)
+    
+    #метод извлечения друзей пользователя
+    def get_user_friends(self, username):
+        users = session.query(ListFriends).filter_by(id_cuser = self.searh_user_id(username)).all()
+        send_users = []
+        for user in users:
+            send_users.append(user.r_id_friend.name)
+        # print('друзья пользователя: {}'.format(send_users))
+        return send_users
+
+    #метод поиска id пользователя
+    def searh_user_id(self, sendname):
+        find_user = session.query(CUsers).filter_by(name = sendname).first()
+        return find_user.id
 
 
         # while True:

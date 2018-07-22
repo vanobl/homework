@@ -7,12 +7,18 @@ from classies.response import CreateResponse
 class VerificationMessage:
     def __init__(self, msg_dict):
         self._dict = msg_dict
+        self._user = ''
     
+    #метод проверки сообщений
     def verification(self):
+        #проверка аутентификации
         if self._dict['action'] == 'authenticate':
             user = VerificationUsers(self._dict['user']['account_name'])
-            return user
+            if user.ver_users():
+                self._user = self._dict['user']['account_name']
+                return self._user
 
+        #проверка пресенс собщения
         if self._dict['action'] == 'presence':
             print('Имя пользователя: {}'.format(self._dict['user']['account_name']))
             user = VerificationUsers(self._dict['user']['account_name'])
@@ -27,11 +33,7 @@ class VerificationMessage:
                 print('Пользователя нет')
                 return pack_resp.pack()
         
+        #проверка сообщения
         if self._dict['action'] == 'msg':
             pass
-        
-        # if self._dict['action'] == 'authenticate':
-        #     user = VerificationUsers(self._dict['user']['account_name'])
-        #     return user
-
             

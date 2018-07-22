@@ -71,8 +71,8 @@ class MyWindow(QtWidgets.QMainWindow):
     def login(self):
         self.polzovatel = self.window.in_login.text()
         auth = Authenticate(self.polzovatel)
-        user = auth.create_authenticate()
-        msg_pack = PackMessage(user)
+        dic = auth.create_authenticate()
+        msg_pack = PackMessage(dic)
         self.s.send(msg_pack.pack())
         #self.set_text_viev()
         self.slush()

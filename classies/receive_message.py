@@ -6,12 +6,12 @@ from classies.verification_message import VerificationMessage
 
 class ReceiveMessage:
     _user_dict = {}
-    def __init__(self):
-        pass
+    def __init__(self, cln):
+        self._cln = cln
     
-    def receive_message(self, cln):
+    def receive_message(self):
         #получаем байты
-        msg = cln.recv(1024)
+        msg = self._cln.recv(1024)
         #получаем json
         jmsg = msg.decode('utf-8')
         #получаем словарь
