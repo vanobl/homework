@@ -12,3 +12,4 @@ if __name__ == "__main__":
     app = PySide2.QtWidgets.QApplication(sys.argv)
     form = Form(os.path.join('mygui', 'main.ui'))
     sys.exit(app.exec_())
+car = 'opel'
