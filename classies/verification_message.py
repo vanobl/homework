@@ -17,6 +17,10 @@ class VerificationMessage:
             if user.ver_users():
                 self._user = self._dict['user']['account_name']
                 return self._user
+        
+        #проверка ответа на аутентификацию
+        if self._dict['action'] == 'back_authenticate':
+            pass
 
         #проверка пресенс собщения
         if self._dict['action'] == 'presence':

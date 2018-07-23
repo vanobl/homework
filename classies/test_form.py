@@ -1,14 +1,19 @@
 #import sys
 import os
 import socket
+import time
+import json
+from threading import Thread
 
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication, QPushButton, QListView, QLineEdit, QTextEdit
 from PySide2.QtCore import QFile, QObject
+from PySide2 import QtGui
 
 #импортируем свобственные классы
 from classies.authenticate import Authenticate
 from classies.pack import PackMessage
+from classies.receive_message import ReceiveMessage
 
 class Form(QObject):
     def __init__(self, ui_file, parent=None):
@@ -45,6 +50,13 @@ class Form(QObject):
         #назначим коннекторы для объектов
         self.btn_login.clicked.connect(self.login)
 
+        #определим потоки
+        self._rec = Thread(target=self.receiving)
+        self._proba = Thread(target=self.prob)
+
+        #запустим потоки
+        self._rec.start()
+
         self.window.show()
 
     #обработка нажатия кнопки входа
@@ -55,3 +67,32 @@ class Form(QObject):
         user = auth.create_authenticate()
         msg_pack = PackMessage(user)
         self.s.send(msg_pack.pack())
+    
+    #метод получения данных
+    def receiving(self):
+        while True:
+            try:
+                #получаем байты
+                msg = self.s.recv(1024)
+                #получаем json
+                jmsg = msg.decode('utf-8')
+                #получаем словарь
+                msg_dict = json.loads(jmsg)
+                #msg_dict = ReceiveMessage(self.s)
+
+                if msg_dict['action'] == 'back_authenticate':
+                    friends = msg_dict['friends']
+                    print(friends)
+                    #self.contact_view.clear()
+                    print('список очищен')
+                    model = QtGui.QStandardItemModel()
+                    for friend in friends:
+                        model.appendRow(QtGui.QStandardItem(friend))
+                        #self.contact_view.addItem(friend)
+                    self.contact_view.setModel(model)
+            except Exception:
+                pass
+    
+    #метод проверки потоков
+    def prob(self):
+        print('проба')

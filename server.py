@@ -12,6 +12,7 @@ from threading import Thread
 from classies.receive_message import ReceiveMessage
 from classies.verification_message import VerificationMessage
 from classies.create_friends import CreateFriends
+from classies.pack import PackMessage
 
 #указываем файл логгера
 logging.config.fileConfig('log.conf')
@@ -67,7 +68,9 @@ class Server:
     #метод отправки пользователей для заполнения списка
     def send_friends(self, friends, sock_user):
         dict_friends = CreateFriends(friends).create_friends()
-        print(dict_friends)
+        b_dict_friends = PackMessage(dict_friends).pack()
+        sock_user.send(b_dict_friends)
+        print('Друзья отправлены.')
 
     def user_get(self):
         while True:
@@ -80,7 +83,6 @@ class Server:
         send_users = []
         for user in users:
             send_users.append(user.r_id_friend.name)
-        # print('друзья пользователя: {}'.format(send_users))
         return send_users
 
     #метод поиска id пользователя
