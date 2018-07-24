@@ -82,17 +82,20 @@ class Form(QObject):
 
                 if msg_dict['action'] == 'back_authenticate':
                     friends = msg_dict['friends']
-                    print(friends)
-                    #self.contact_view.clear()
-                    print('список очищен')
-                    model = QtGui.QStandardItemModel()
-                    for friend in friends:
-                        model.appendRow(QtGui.QStandardItem(friend))
-                        #self.contact_view.addItem(friend)
-                    self.contact_view.setModel(model)
+                    print('получены друзья: {}'.format(friends))
+                    self.set_text_viev(friends)
             except Exception:
                 pass
     
     #метод проверки потоков
     def prob(self):
         print('проба')
+    
+    #заполняем список друзей
+    def set_text_viev(self, friends):
+        print('список очищен')
+        model = QtGui.QStandardItemModel()
+        for myfriend in friends:
+            model.appendRow(QtGui.QStandardItem(myfriend))
+            #self.contact_view.addItem(friend)
+        self.contact_view.setModel(model)
