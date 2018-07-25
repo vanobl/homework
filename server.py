@@ -35,7 +35,8 @@ class Server:
         self.s.listen(5)
         self.s.settimeout(0.2)
 
-        self._clients = {}
+        self._clients = []
+        self._names = {}
         self._adduser = Thread(target=self.user_connect)
         self._guser = Thread(target=self.user_get)
         text = u'Запуск сервера.'
@@ -58,19 +59,46 @@ class Server:
                 ver = VerificationMessage(mydict)
                 user = ver.verification()
                 #добавляем клиента и его сокет в словарь
-                self._clients[user] = sock_client
+                self._clients.append(sock_client)
+                self._names[user] = sock_client
                 #отправляем имена пользователей клиенту
-                self.send_friends(self.get_user_friends(user), self._clients[user])
+                self.send_friends(self.get_user_friends(user), self._names[user])
+                self.send_users_for_combo(user, self._names[user])
             except OSError as e:
                 #ошибка истечения таймаута
                 pass
+            # finally:
+            #     #проверяем ввода-вывода
+            #     r = []
+            #     w = []
+            #     e = []
+            #     try:
+            #         w, r, e = select.select(self._clients, self._clients, self._clients, 0)
+            #     except Exception as e:
+            #         print(e)
     
-    #метод отправки пользователей для заполнения списка
+    #метод отправки друзей для заполнения списка
     def send_friends(self, friends, sock_user):
         dict_friends = CreateFriends(friends).create_friends()
         b_dict_friends = PackMessage(dict_friends).pack()
         sock_user.send(b_dict_friends)
         print('Друзья отправлены.')
+    
+    #метод отправки пользователей для заполнения ComboBox
+    def send_users_for_combo(self, polzovatel, sock_user):
+        users = session.query(CUsers).all()
+        send_users = []
+        for user in users:
+            if user.name != polzovatel:
+                #self.window.list_users.addItem(user.name)
+                send_users.append(user.name)
+        maybe_friends = {
+            'action': 'user_for_combo',
+            'users': send_users,
+        }
+
+        b_maybe_friends = PackMessage(maybe_friends).pack()
+        sock_user.send(b_maybe_friends)
 
     def user_get(self):
         while True:

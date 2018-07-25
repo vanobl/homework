@@ -14,26 +14,6 @@
    <string>Сообщатор</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListView" name="contactView">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>151</width>
-      <height>401</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="win_chat">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>50</y>
-      <width>441</width>
-      <height>351</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btn_login">
     <property name="geometry">
      <rect>
@@ -120,6 +100,26 @@
      <string>Отправить</string>
     </property>
    </widget>
+   <widget class="QListWidget" name="contactView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>151</width>
+      <height>401</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="win_chat">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>50</y>
+      <width>441</width>
+      <height>351</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -160,12 +160,10 @@
  <tabstops>
   <tabstop>in_login</tabstop>
   <tabstop>btn_login</tabstop>
-  <tabstop>contactView</tabstop>
   <tabstop>btn_add_friend</tabstop>
   <tabstop>list_users</tabstop>
   <tabstop>btn_send</tabstop>
   <tabstop>text_input</tabstop>
-  <tabstop>win_chat</tabstop>
  </tabstops>
  <resources/>
  <connections/>

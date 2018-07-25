@@ -37,6 +37,10 @@ class VerificationMessage:
                 print('Пользователя нет')
                 return pack_resp.pack()
         
+        #проверка запроса истории
+        if self._dict['action'] == 'history':
+            print('Пришло сообщение на запрос истории')
+        
         #проверка сообщения
         if self._dict['action'] == 'msg':
             pass

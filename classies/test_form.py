@@ -6,7 +6,7 @@ import json
 from threading import Thread
 
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QApplication, QPushButton, QListView, QLineEdit, QTextEdit
+from PySide2.QtWidgets import QApplication, QPushButton, QListView, QLineEdit, QTextEdit, QListWidget, QComboBox
 from PySide2.QtCore import QFile, QObject
 from PySide2 import QtGui
 
@@ -14,6 +14,7 @@ from PySide2 import QtGui
 from classies.authenticate import Authenticate
 from classies.pack import PackMessage
 from classies.receive_message import ReceiveMessage
+from classies.create_history import CreateHistory
 
 class Form(QObject):
     def __init__(self, ui_file, parent=None):
@@ -33,11 +34,12 @@ class Form(QObject):
 
         #определим элементы управления
         self.btn_login = self.window.findChild(QPushButton, 'btn_login')
-        self.contact_view = self.window.findChild(QListView, 'contactView')
+        self.contact_view = self.window.findChild(QListWidget, 'contactView')
         self.line_login = self.window.findChild(QLineEdit, 'in_login')
-        self.win_chat = self.window.findChild(QTextEdit, 'win_chat')
+        self.win_chat = self.window.findChild(QListWidget, 'win_chat')
         self.text_input = self.window.findChild(QTextEdit, 'text_input')
         self.btn_send = self.window.findChild(QPushButton, 'btn_send')
+        self.list_users = self.win_chat.findChild(QComboBox, 'list_users')
 
         #назначим подсказки для элементов управления
         self.btn_login.setToolTip('Кнопка входа')
@@ -49,6 +51,7 @@ class Form(QObject):
 
         #назначим коннекторы для объектов
         self.btn_login.clicked.connect(self.login)
+        self.contact_view.itemClicked.connect(self.history_messagess)
 
         #определим потоки
         self._rec = Thread(target=self.receiving)
@@ -84,6 +87,10 @@ class Form(QObject):
                     friends = msg_dict['friends']
                     print('получены друзья: {}'.format(friends))
                     self.set_text_viev(friends)
+                if msg_dict['action'] == 'user_for_combo':
+                    users = msg_dict['users']
+                    print('получены пользователи: {}'.format(users))
+                    self.fill_combo(users)
             except Exception:
                 pass
     
@@ -93,9 +100,30 @@ class Form(QObject):
     
     #заполняем список друзей
     def set_text_viev(self, friends):
-        print('список очищен')
-        model = QtGui.QStandardItemModel()
-        for myfriend in friends:
-            model.appendRow(QtGui.QStandardItem(myfriend))
-            #self.contact_view.addItem(friend)
-        self.contact_view.setModel(model)
+        # model = QtGui.QStandardItemModel()
+        # for myfriend in friends:
+        #     model.appendRow(QtGui.QStandardItem(myfriend))
+        #     #self.contact_view.addItem(friend)
+        # self.contact_view.setModel(model)
+        # # self.contact_view.
+        for myfriends in friends:
+            self.contact_view.addItem(myfriends)
+    
+    #метод заполнения ComboBox
+    def fill_combo(self, users):
+        print(users)
+        for user in users:
+            print('{} добавлен'.format(user))
+            #self.list_users.addItem(user)
+    
+    #метод вовода сообщений с другом
+    def history_messagess(self):
+        userto = ''
+        list = self.contact_view.selectedItems()
+        for lst in list:
+            userto = lst.text()
+        history_dict = CreateHistory(self.polzovatel, userto).create_history()
+        print(history_dict)
+        b_history_dict = PackMessage(history_dict).pack()
+        self.s.send(b_history_dict)
+        print('Запрос истории отправлен')
