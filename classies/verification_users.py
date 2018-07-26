@@ -1,7 +1,7 @@
 import os
 import sqlalchemy
 #импортируем классы таблиц
-from db.alchemy import CUsers
+from db.alchemy import CUsers, CMassages
 #создаём подключение
 path = os.path.join('db', 'messages.db')
 engine = sqlalchemy.create_engine('sqlite:///{}'.format(path))

@@ -13,6 +13,7 @@ from classies.receive_message import ReceiveMessage
 from classies.verification_message import VerificationMessage
 from classies.create_friends import CreateFriends
 from classies.pack import PackMessage
+from classies.create_back_history import CreateBackHistory
 
 #указываем файл логгера
 logging.config.fileConfig('log.conf')
@@ -67,15 +68,28 @@ class Server:
             except OSError as e:
                 #ошибка истечения таймаута
                 pass
-            # finally:
-            #     #проверяем ввода-вывода
-            #     r = []
-            #     w = []
-            #     e = []
-            #     try:
-            #         w, r, e = select.select(self._clients, self._clients, self._clients, 0)
-            #     except Exception as e:
-            #         print(e)
+            finally:
+                #проверяем ввода-вывода
+                r = []
+                w = []
+                e = []
+                try:
+                    w, r, e = select.select(self._clients, self._clients, self._clients, 0)
+                except Exception as e:
+                    #print(e)
+                    pass
+                
+                self.read_input_messeges(w)
+    
+    #метод чтения входящих сообщений
+    def read_input_messeges(self, clients):
+        for mes in clients:
+            msg_dict = ReceiveMessage(mes).receive_message()
+            dict_msg = VerificationMessage(msg_dict).verification()
+            b_dict_msg = PackMessage(dict_msg).pack()
+            sock = self._names['vanobl']
+            sock.send(b_dict_msg)
+
     
     #метод отправки друзей для заполнения списка
     def send_friends(self, friends, sock_user):

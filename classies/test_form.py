@@ -91,6 +91,8 @@ class Form(QObject):
                     users = msg_dict['users']
                     print('получены пользователи: {}'.format(users))
                     self.fill_combo(users)
+                if msg_dict['action'] == 'back_history':
+                    print('Получена история')
             except Exception:
                 pass
     

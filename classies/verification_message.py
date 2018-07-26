@@ -3,6 +3,8 @@ from classies.probe import CreateProbe
 from classies.pack import PackMessage
 from classies.verification_users import VerificationUsers
 from classies.response import CreateResponse
+from classies.retriev_history import RetrievHistory
+from classies.create_back_history import CreateBackHistory
 
 class VerificationMessage:
     def __init__(self, msg_dict):
@@ -40,6 +42,14 @@ class VerificationMessage:
         #проверка запроса истории
         if self._dict['action'] == 'history':
             print('Пришло сообщение на запрос истории')
+            history = RetrievHistory(self._dict['userfrom'], self._dict['userto']).retriev_history()
+            for h in history:
+                print('Сообщение: {}. от: {}'.format(h.message, h.p_user_from.name))
+            
+            dict_history = CreateBackHistory(history).back_history()
+            print(dict_history)
+            
+            return dict_history
         
         #проверка сообщения
         if self._dict['action'] == 'msg':

@@ -1,9 +1,6 @@
 import json
 import time
 
-#импортируем свои классы
-from classies.verification_message import VerificationMessage
-
 class ReceiveMessage:
     _user_dict = {}
     def __init__(self, cln):

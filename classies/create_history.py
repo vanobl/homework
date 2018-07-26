@@ -3,6 +3,7 @@ class CreateHistory:
         self._userfrom = client_from
         self._userto = client_to
     
+    #запрос на получение истории
     def create_history(self):
         history = {
             'action': 'history',
