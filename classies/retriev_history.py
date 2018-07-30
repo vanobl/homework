@@ -19,4 +19,5 @@ class RetrievHistory:
         ut = session.query(CUsers).filter_by(name=self._userto).first()
         #messages = session.query(CMassages).filter_by(user_from=uf.id).all()
         messages = session.query(CMassages).filter(or_(and_(CMassages.user_from == uf.id, CMassages.user_to == ut.id), and_(CMassages.user_from == ut.id, CMassages.user_to == uf.id))).all()
+        print('Из запроса: {}'.format(messages))
         return messages
